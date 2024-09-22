@@ -215,7 +215,7 @@ h1, h2, h3, h4 {
   color: var(--secondary-fg);
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-max: 1200px) {
   body {
     display: flex;
     flex-direction: column;
