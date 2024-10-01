@@ -42,7 +42,3 @@ WHERE classification_name = 'Sport';
 --and inv_thumbnail columns using a single query. 
 UPDATE public.inventory
 SET inv_image = REPLACE(inv_thumbnail, '/images', '/images/vehicles');
--- Type: account_type 
--- DROP TYPE IF EXISTS public."account_type";
-CREATE TYPE public."account_type " AS ENUM ('Client', 'Employee', 'Admin');
-ALTER TYPE public."account_type " OWNER TO cse340j;
