@@ -41,4 +41,5 @@ WHERE classification_name = 'Sport';
 --Q6 Update all records in the inventory table to add "/vehicles" to the middle of the file path in the inv_image 
 --and inv_thumbnail columns using a single query. 
 UPDATE public.inventory
-SET inv_image = REPLACE(inv_thumbnail, '/images', '/images/vehicles');
+SET inv_image = REPLACE(inv_image, '/images', '/images/vehicles'),
+    inv_thumbnail = REPLACE(inv_thumbnail, '/images', '/images/vehicles');
