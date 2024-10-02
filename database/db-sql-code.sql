@@ -242,7 +242,8 @@ SET inv_description = REPLACE(
         'small interiors',
         'a huge interior'
     )
-WHERE classification_name = 'Sport';
+WHERE inv_make = 'GM'
+    AND inv_model = 'Hummer';
 --Q6 Update all records in the inventory table to add "/vehicles" to the middle of the file path in the inv_image 
 --and inv_thumbnail columns using a single query. 
 UPDATE public.inventory
