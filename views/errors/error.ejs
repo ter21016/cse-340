@@ -1,5 +1,6 @@
-<div class="error-display">
-    <h2><%- title %></h2>
-    <p><%- message %></p>
-    <img src="/images/site/error.svg" alt="error">
-</div>
+<div class="error-container">
+    <h1><%= title %></h1>
+    <p><%- message %></p> <!-- Unescaped to handle HTML inside the message -->
+    <p> I know you are tired, take a break. We can do this!</p>
+    <p><a href="/">Go back to Home</a></p>
+  </div>
