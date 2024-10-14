@@ -8,8 +8,15 @@ const utilities = require("../utilities")
 
 // Route to build inventory by classification view
 
-router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId));
-router.get("/detail/:inventoryId", utilities.handleErrors(invController.buildByInventoryId));
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId))
+router.get("/detail/:inventoryId", utilities.handleErrors(invController.buildByInventoryId))
+
+
+
+// Classification management routes
+
+
+
 
 
 

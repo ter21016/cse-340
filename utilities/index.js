@@ -67,6 +67,7 @@ Util.buildItemListing = async function (data) {
   console.dir({ data });
   if (data) {
     listingHTML = `
+      
       <section class="car-listing">
         <img src="${data.inv_image}" alt="${data.inv_make} ${data.inv_model}">
         <div class="car-information">
@@ -97,15 +98,16 @@ Util.buildItemListing = async function (data) {
 
         </div>
       </section>
-    `;
-    // listingHTML += '<img src="/images/notexist.jpg">'; // Introduce 404 error
+    `
+   //listingHTML += '<img src="/images/notexist.jpg">'; // Introduce 404 error
   } else {
     listingHTML = `
+    
       <p>Sorry, no matching vehicles could be found.</p>
-    `;
+    `
   }
   return listingHTML
-};
+}
 
 /* ****************************************
  * Middleware For Handling Errors
