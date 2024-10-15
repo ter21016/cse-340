@@ -456,11 +456,12 @@ table thead tr th {
   transform: translateY(-2px);
   transition: .3s box-shadow, .3s transform;
 }
-.button-strip img {
+/*.button-strip img {
   height: 100%;
   width: 100%;
   pointer-events: none;
-}
+}*/
+
 .button-strip *:first-child {
   border-radius: .5rem 0 0 .5rem;
 }
