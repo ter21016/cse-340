@@ -1,74 +1,95 @@
 /* ******************************************
- * This server.js file is the primary file of the 
+ * This server.js file is the primary file of the
  * application. It is used to control the project.
  *******************************************/
+
 /* ***********************
  * Require Statements
  *************************/
+// Their stuff
 const express = require("express")
+const expressLayouts = require("express-ejs-layouts")
 const session = require("express-session")
-const pool = require("./database/")
-const expressLayouts =require("express-ejs-layouts")
-const env = require("dotenv").config()
+const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
+
+
+// My stuff
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
-const utilities = require("./utilities/index.js")
-//const errorRoute = require("./routes/errorRoute")
-//const accountRoute = require("./routes/accountRoute")
+const accountRoute = require("./routes/accountRoute")
+const messageRoute = require("./routes/messageRoute")
+const intentionalErrorRoute = require("./routes/intentionalErrorRoute")
+const utilities = require("./utilities/")
+const pool = require("./database")
 
-
+// Init
 const app = express()
+const env = require("dotenv").config()
 
 
-/********** 
-* Middleware
+/* ***********************
+ * Middleware
  * ************************/
- app.use(session({
-  store: new (require('connect-pg-simple')(session))({
-    createTableIfMissing: true,
-    pool,
-  }),
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  name: 'sessionId',
-}))
-
+app.use(
+  session({
+    store: new (require("connect-pg-simple")(session))({
+      createTableIfMissing: true,
+      pool,
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    name: "sessionId",
+  }))
 
 // Express Messages Middleware
-app.use(require('connect-flash')())
-app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res)
+app.use(require("connect-flash")())
+app.use(function (req, res, next) {
+  res.locals.messages = require("express-messages")(req, res)
   next()
 })
+
+
+// JWT checker
+app.use(utilities.checkJWTToken)
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ // for parsing application/x-www-form-urlencoded
+  extended: true
+}))
+// Cookie parser
+app.use(cookieParser())
+
+// JWT checker
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates
  *************************/
 app.set("view engine", "ejs")
 app.use(expressLayouts)
-app.set("layout", "./layouts/layout"); // not at views root
-
-
-
+app.set("layout", "./layouts/layout") // Not at view root
 
 /* ***********************
  * Routes
  *************************/
 app.use(require("./routes/static"))
-//Index route
+// Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
-app.use("/inv", require("./routes/inventoryRoute"))
+app.use("/inv", require(".routes/inventoryRoute"))
 
-
-
+// Account routes - Unit 4
+app.use("/account", require("./routes/accountRoute"))
+// Message routes
+app.use("/message", messageRoute)
+// Intentional error route. Used for testing
+app.use("/ierror", intentionalErrorRoute)
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
-  next({status: 404, message: 'Sorry, we appear to have lost that page.'})
+  next({status: 404, message: 'Sorry, we appear to have lost that page' })
 })
-
 
 /* ***********************
 * Express Error Handler
@@ -77,7 +98,8 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  console.dir(err);
+  if(err.status == 404){ message = err.message} else {message = 'Sorry, we appear to have lost that page'}
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
@@ -97,4 +119,4 @@ const host = process.env.HOST
  *************************/
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
-});
+})

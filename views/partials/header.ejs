@@ -1,8 +1,33 @@
 <header id="top-header">
-    <span class="siteName">
-      <a href="/" title="Return to home page">New Motors</a>
-    </span>
-    <div id="tools">
-      <a title="Click to log in" href="/account/login">My Account</a>
-    </div>
-  </header>
+  <h1>
+      <span class="siteName">
+        <img src="/images/site/favicon-32x32.png" alt="car">
+          <a href="/" title="Return to home page">New Motors</a>
+      </span>
+  </h1>
+  <% if(locals.loggedin == 1) { %>
+  <div id="tools">
+      <a title="Account page" href="/account">Welcome <%- locals.accountData.account_firstname %> </a><a title="Log out" href="/account/logout">Logout</a>
+  </div>
+  <% } else { %>
+      <div id="tools">
+          <a title="Click to log in" href="/account/login">My Account</a>
+      </div>
+      <% } %>
+</header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
