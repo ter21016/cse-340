@@ -25,6 +25,7 @@ async function buildRegister(req, res, next) {
   res.render("account/register", {
     title: "Register",
     nav,
+    errors: null,
     
   })
 }
@@ -87,12 +88,7 @@ async function registerAccount(req, res) {
 
 
 
-/**
- * Process account management get request
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 async function buildAccountManagementView(req, res) {
   let nav = await utilities.getNav();
   const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id)
@@ -167,10 +163,10 @@ async function updateAccount(req, res) {
     //Update the cookie accountData
     // TODO: Better way to do this?
 
-    const accountData = await accountModel.getAccountById(account_id); // Get it from db so we can remake the cookie
+    const accountData = await accountModel.getAccountById(account_id)
     delete accountData.account_password;
-    res.locals.accountData.account_firstname = accountData.account_firstname; // So it displays correctly
-    utilities.updateCookie(accountData, res); // Remake the cookie with new data
+    res.locals.accountData.account_firstname = accountData.account_firstname
+    utilities.updateCookie(accountData, res); 
 
     res.status(201).render("account/account-management", {
       title: "Management",

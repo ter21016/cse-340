@@ -63,12 +63,6 @@ async function buildArchive(req, res, next) {
   });
 }
 
-/**
- * Deliver message view get
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
 async function buildMessageView(req, res, next) {
   const messageId = req.params.messageId;
   const messageData = await messageModel.getMessageById(messageId);
@@ -87,12 +81,7 @@ async function buildMessageView(req, res, next) {
   }
 }
 
-/**
- * Deliver compose view get
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 async function buildCompose(req, res, next) {
   const nav = await utilities.getNav();
   const recipientData = await accountModel.getAccountList()
@@ -124,12 +113,7 @@ async function buildCompose(req, res, next) {
   })
 }
 
-/**
- * Process send message post
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 async function sendMessage(req, res, next) {
   const result = await messageModel.sendMessage({
     message_from: res.locals.accountData.account_id,
@@ -141,12 +125,6 @@ async function sendMessage(req, res, next) {
   res.redirect("/message")
 }
 
-/**
- * Deliver delete confirmation view get
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
 async function buildDelete(req, res, next) {
   let nav = await utilities.getNav()
   const messageData = await messageModel.getMessageById(req.params.messageId)
@@ -159,35 +137,20 @@ async function buildDelete(req, res, next) {
   })
 }
 
-/**
- * Process delete post
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 async function deleteMessage(req, res, next) {
   messageModel.deleteMessage(req.body.message_id)
   req.flash("notice", "Message deleted")
   res.redirect("/message")
 }
 
-/**
- * Toggle a messages read flag
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 async function toggleRead(req, res, next) {
   const message_read = await messageModel.toggleRead(req.params.messageId); // Returns the new value of message_read
   return res.json(message_read)
 }
 
-/**
- *  Toggle a messages archived flag
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 async function toggleArchived(req, res, next) {
   const message_read = await messageModel.toggleArchived(req.params.messageId); // Returns the new value of message_read
   return res.json(message_read)

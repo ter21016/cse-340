@@ -1,11 +1,5 @@
 const pool = require("../database/")
 
-/**
- * Get messages sent to account id
- * @param {number} accountId
- * @param {boolean} archived
- * @returns {object}
- */
 async function getMessagesToId(accountId, archived = false) {
   const sqlQuery = `
     SELECT 

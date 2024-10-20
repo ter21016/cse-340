@@ -1,6 +1,5 @@
 const invModel = require("../models/inventory-model")
 const jwt = require("jsonwebtoken")
-
 require("dotenv").config()
 
 const Util = {}
@@ -131,11 +130,7 @@ Util.buildItemListing = async function (data) {
   return listingHTML
 }
 
-/**
- * Build an HTML select element with classification data
- * @param {int} classification_id
- * @returns {string}
- */
+
 
 Util.buildClassificationList = async function (classification_id = null) {
   let data = await invModel.getClassifications()
@@ -189,8 +184,7 @@ Util.checkJWTToken = (req, res, next) => {
 
 /**
  * Function to update the browser cookie.
- * @param {object} accountData
- * @param {import("express").Response} res
+
  */
 
 Util.updateCookie = (accountData, res) => {
@@ -252,11 +246,7 @@ Util.checkAuthorizationManager = (req, res, next) => {
 }
 
 
-/**
- * Build an html table string from the message array
- * @param {Array<Message>} messages 
- * @returns 
- */
+
 Util.buildInbox = (messages) => {
   inboxList = `
   <table>

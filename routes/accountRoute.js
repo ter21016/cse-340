@@ -3,32 +3,24 @@ const express = require("express")
 const router = new express.Router()
 
 const accountController = require("../controllers/accountController")
-const utilities = require("../utilities")
+const utilities = require("../utilities/")
 const regValidate = require("../utilities/account-validation")
 
 
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagementView))
 
-// Deliver Login View //
-//Unit 4//
-router.get("/login", utilities.handleErrors(accountController.buildLogin))
-router.post(
-  "/login",
-  regValidate.loginRules(),
-  regValidate.checkLoginData,
-  utilities.handleErrors(accountController.accountLogin)
-)
+
 
 // Route to logout
 router.get("/logout", utilities.handleErrors(accountController.accountLogout))
 
 // Registration handlers
-router.get("/registration", utilities.handleErrors(accountController.buildRegister))
+router.get("/registration", utilities.handleErrors(accountController.buildRegistration))
 router.post(
-  "/register",
+  "/registration",
   regValidate.registrationRules(),
   regValidate.checkRegData,
-  utilities.handleErrors(accountController.registerAccount)
+  utilities.handleErrors(accountController.registrationAccount)
 )
 
 // Update account handlers
@@ -47,11 +39,21 @@ router.post(
 )
 
 // Process the login attempt
+//router.post(
+ // "/login",
+  //(req, res) => {
+   // res.status(200).send('login process')
+  //}
+//)
+
+
+// Deliver Login View //
+//Unit 4//
+router.get("/login", utilities.handleErrors(accountController.buildLogin))
 router.post(
   "/login",
-  (req, res) => {
-    res.status(200).send('login process')
-  }
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
 )
-
 module.exports = router

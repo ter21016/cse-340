@@ -12,7 +12,7 @@ const expressLayouts = require("express-ejs-layouts")
 const session = require("express-session")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
-
+//const { getNav, checkJWTToken, handleErrors } = require("./utilities/")
 
 // My stuff
 const static = require("./routes/static")
