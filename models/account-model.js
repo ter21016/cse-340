@@ -20,27 +20,22 @@ async function registerAccount(
     ]);
   } catch (error) {
     return error.message
+    
   }
 }
 
 /* **********************
  *   Check for existing email
  * ********************* */
-async function checkExistingEmail(account_email, excludedEmail = null) {
-  try {
-    if(excludedEmail) {
-      const sql = "SELECT * FROM account WHERE account_email = $1 AND account_email != $2"
-      const email = await pool.query(sql, [account_email, excludedEmail])
-      return email.rowCount
+async function checkExistingEmail(account_email) {
+    try {
+        const sql = "SELECT * FROM public.account WHERE account_email = $1"
+        const { rowCount } = await pool.query(sql, [account_email])
+
+        return rowCount
+    } catch (error) {
+        return error.message
     }
-    else {
-      const sql = "SELECT * FROM account WHERE account_email = $1"
-      const email = await pool.query(sql, [account_email])
-      return email.rowCount
-    }
-  } catch (error) {
-    return error.message
-  }
 }
 
 /* ********************************
@@ -94,15 +89,15 @@ async function updatePassword(account_id, hashed_password) {
 
 }
 
-async function getAccountList() {
-  const sql = "SELECT account_id, account_firstname, account_lastname FROM public.account"
-  try {
-    const response = await pool.query(sql)
-    return response.rows;
-  }
-  catch(error) {
-    return new Error("Failed to get account list")
-  }
-}
+// async function getAccountList() {
+//   const sql = "SELECT account_id, account_firstname, account_lastname FROM public.account"
+//   try {
+//     const response = await pool.query(sql)
+//     return response.rows;
+//   }
+//   catch(error) {
+//     return new Error("Failed to get account list")
+//   }
+// }
 
-module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountById, updateAccount, updatePassword,getAccountList };
+module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountById, updateAccount, updatePassword};

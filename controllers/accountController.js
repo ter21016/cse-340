@@ -1,7 +1,7 @@
 const utilities = require("../utilities")
 const accountModel = require("../models/account-model")
 const bcrypt = require("bcryptjs")
-const messageModel = require("../models/message-model")
+//onst messageModel = require("../models/message-model")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
@@ -14,6 +14,7 @@ async function buildLogin(req, res, next) {
   res.render("account/login", {
     title: "Login",
     nav,
+    errors: null
   })
 }
 
@@ -24,8 +25,9 @@ async function buildRegister(req, res, next) {
   let nav = await utilities.getNav();
   res.render("account/register", {
     title: "Register",
-    nav,
+    
     errors: null,
+    nav
     
   })
 }
@@ -55,8 +57,10 @@ async function registerAccount(req, res) {
     res.status(500).render("account/register", {
       title: "Registration",
       nav,
+      errors: null
       
     })
+    return; // Exit the fuction after error handling
   }
 
   const regResult = await accountModel.registerAccount(

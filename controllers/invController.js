@@ -1,5 +1,5 @@
 const invModel = require("../models/inventory-model")
-const utilities = require("../utilities/index")
+const utilities = require("../utilities/")
 
 const invCont = {}
 
@@ -50,7 +50,6 @@ invCont.buildManagementView = async function (req, res, next){
     title: "Vehicle Management",
     errors: null,
     nav,
-    errors: null,
     classificationSelect,
   })
 }

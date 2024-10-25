@@ -9,24 +9,24 @@
 // Their stuff
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
+const env = require("dotenv").config()
 const session = require("express-session")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 //const { getNav, checkJWTToken, handleErrors } = require("./utilities/")
 
-// My stuff
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
 const messageRoute = require("./routes/messageRoute")
-const intentionalErrorRoute = require("./routes/intentionalErrorRoute")
+const errorRoute = require("./routes/errorRoute")
 const utilities = require("./utilities/")
 const pool = require("./database")
 
 // Init
 const app = express()
-const env = require("dotenv").config()
+
 
 
 /* ***********************
@@ -53,16 +53,16 @@ app.use(function (req, res, next) {
 
 
 // JWT checker
-app.use(utilities.checkJWTToken)
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ // for parsing application/x-www-form-urlencoded
   extended: true
 }))
 // Cookie parser
 app.use(cookieParser())
-
-// JWT checker
 app.use(utilities.checkJWTToken)
+
+
 
 /* ***********************
  * View Engine and Templates
@@ -85,7 +85,7 @@ app.use("/account", require("./routes/accountRoute"))
 // Message routes
 app.use("/message", messageRoute)
 // Intentional error route. Used for testing
-app.use("/ierror", intentionalErrorRoute)
+app.use("/ierror", errorRoute)
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page' })

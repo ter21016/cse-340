@@ -147,9 +147,9 @@ validate.checkRegData = async (req, res, next) => {
     errors = validationResult(req)
     if (!errors.isEmpty()) {
         let nav = await utilities.getNav()
-        res.render("account/registration", {
+        res.render("account/login", {
             errors,
-            title: "Registration",
+            title: "login",
             nav,
             account_firstname,
             account_lastname,

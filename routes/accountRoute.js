@@ -9,19 +9,25 @@ const regValidate = require("../utilities/account-validation")
 
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagementView))
 
-
-
-// Route to logout
-router.get("/logout", utilities.handleErrors(accountController.accountLogout))
+// Deliver Login View //
+//Unit 4//
+router.get("/login", utilities.handleErrors(accountController.buildLogin))
+router.post(
+  "/login",
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
+)
 
 // Registration handlers
-router.get("/registration", utilities.handleErrors(accountController.buildRegistration))
+router.get("/registration", utilities.handleErrors(accountController.buildRegister))
 router.post(
-  "/registration",
+  "/register",
   regValidate.registrationRules(),
   regValidate.checkRegData,
-  utilities.handleErrors(accountController.registrationAccount)
+  utilities.handleErrors(accountController.registerAccount)
 )
+
 
 // Update account handlers
 router.get("/update/:accountId", utilities.handleErrors(accountController.buildUpdate))
@@ -46,14 +52,7 @@ router.post(
   //}
 //)
 
+// Route to logout
+router.get("/logout", utilities.handleErrors(accountController.accountLogout))
 
-// Deliver Login View //
-//Unit 4//
-router.get("/login", utilities.handleErrors(accountController.buildLogin))
-router.post(
-  "/login",
-  regValidate.loginRules(),
-  regValidate.checkLoginData,
-  utilities.handleErrors(accountController.accountLogin)
-)
 module.exports = router
