@@ -4,7 +4,7 @@ require("dotenv").config()
 
 const utilities = require("../utilities")
 const accountModel = require("../models/account-model")
-const messageModel = require("../model/message-model")
+const messageModel = require("../models/message-model")
 
 /* ****************************************
  *  Deliver login view
@@ -284,4 +284,4 @@ module.exports = {
   accountLogout, 
   buildUpdate, 
   updateAccount, 
-  updatePassword }
+  updatePassword };
