@@ -13,7 +13,7 @@ const env = require("dotenv").config()
 const session = require("express-session")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
-//const { getNav, checkJWTToken, handleErrors } = require("./utilities/")
+const { getNav, checkJWTToken, handleErrors } = require("./utilities/")
 
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
