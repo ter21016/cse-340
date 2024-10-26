@@ -55,7 +55,7 @@ app.use(function (req, res, next) {
 // JWT checker
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ 
   extended: true
 }))
 // Cookie parser
@@ -78,7 +78,7 @@ app.use(require("./routes/static"))
 // Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
-app.use("/inv", require(".routes/inventoryRoute"))
+app.use("/inv", require("./routes/inventoryRoute"))
 
 // Account routes - Unit 4
 app.use("/account", require("./routes/accountRoute"))
