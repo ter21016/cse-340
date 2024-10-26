@@ -6,12 +6,7 @@ const utilities = require("../utilities")
 const accountModel = require("../models/account-model")
 const messageModel = require("../models/message-model")
 
-/**
- * Deliver inbox view get
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
+
 
 async function buildInbox(req, res, next) {
   let nav = await utilities.getNav()
