@@ -6,6 +6,22 @@ const utilities = require("../utilities")
 const accountModel = require("../models/account-model")
 const messageModel = require("../models/message-model")
 
+
+
+async function buildAccountManagementView(req, res) {
+  let nav = await utilities.getNav();
+  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id)
+
+  res.render("account/account-management", {
+    title: "Account Management",
+    nav,
+    errors: null,
+   unread, 
+  });
+  
+}
+
+
 /* ****************************************
  *  Deliver login view
  * *************************************** */
@@ -14,8 +30,8 @@ async function buildLogin(req, res, next) {
   res.render("account/login", {
     title: "Login",
     nav,
-    errors: null
-  })
+    errors: null,
+  });
 }
 
 /* ****************************************
@@ -25,11 +41,11 @@ async function buildRegister(req, res, next) {
   let nav = await utilities.getNav();
   res.render("account/register", {
     title: "Register",
-    
+    nav,
     errors: null,
-    nav
     
-  })
+    
+  });
 }
 
 /* ****************************************
@@ -47,17 +63,17 @@ async function registerAccount(req, res) {
   // Hash the password before storing
   let hashedPassword
   try {
-    // regular password and cost (salt is generated automatically)
-    hashedPassword = await bcrypt.hashSync(account_password, 10)
+   
+    const hashedPassword = await bcrypt.hashSync(account_password, 10);
   } catch (error) {
     req.flash(
       "notice",
       "Sorry, there was an error processing the registration."
     )
     res.status(500).render("account/register", {
-      title: "Registration",
+      title: "Register",
       nav,
-      errors: null
+      errors: null,
       
     })
     return; // Exit the fuction after error handling
@@ -83,40 +99,11 @@ async function registerAccount(req, res) {
   } else {
     req.flash("notice", "Sorry, the registration failed.");
     res.status(501).render("account/register", {
-      title: "Registration",
+      title: "Register",
       errors: null,
       nav,
     })
   }
-}
-
-
-
-
-async function buildAccountManagementView(req, res) {
-  let nav = await utilities.getNav();
-  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id)
-
-  res.render("account/account-management", {
-    title: "Account Management",
-    nav,
-    errors: null,
-    unread, 
-  });
-  return; 
-}
-
-/* ****************************************
- *  Process logout request
- * ************************************ */
-async function accountLogout(req, res) {
-  res.clearCookie("jwt")
-  delete res.locals.accountData;
-  res.locals.loggedin = 0;
-  req.flash("notice", "Logout successful.")
-  res.redirect("/");
-  return; 
-
 }
 
 /* ****************************************
@@ -138,6 +125,55 @@ async function buildUpdate(req, res, next) {
   });
 }
 
+
+
+/* ****************************************
+ *  Process login request
+ * ************************************ */
+async function accountLogin(req, res) {
+  let nav = await utilities.getNav()
+  const { account_email, account_password } = req.body
+  const accountData = await accountModel.getAccountByEmail(account_email)
+  if (!accountData) {
+   req.flash("notice", "Please check your credentials and try again.")
+   res.status(400).render("account/login", {
+    title: "Login",
+    nav,
+    errors: null,
+    account_email
+   })
+  return
+  }
+  try {
+   if (await bcrypt.compare(account_password, accountData.account_password)) {
+   delete accountData.account_password
+   const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 })
+   if(process.env.NODE_ENV === 'development') {
+     res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+     } else {
+       res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
+     }
+   return res.redirect("/account/")
+   }
+  } catch (error) {
+   return new Error('Access Forbidden')
+  }
+ }
+
+/* ****************************************
+ *  Process logout request
+ * ************************************ */
+async function accountLogout(req, res) {
+  res.clearCookie("jwt")
+  delete res.locals.accountData;
+  res.locals.loggedin = 0;
+  req.flash("notice", "Logout successful.")
+  res.redirect("/");
+  return; 
+
+}
+
+
 /* ****************************************
  *  Process account update post
  * *************************************** */
@@ -148,7 +184,7 @@ async function updateAccount(req, res) {
     account_firstname,
     account_lastname,
     account_email,
-    // account_password,
+    account_password,
   } = req.body;
 
   const regResult = await accountModel.updateAccount(
@@ -242,38 +278,6 @@ async function updatePassword(req, res) {
 
 
 
-/* ****************************************
- *  Process login request
- * ************************************ */
-async function accountLogin(req, res) {
-  let nav = await utilities.getNav()
-  const { account_email, account_password } = req.body
-  const accountData = await accountModel.getAccountByEmail(account_email)
-  if (!accountData) {
-   req.flash("notice", "Please check your credentials and try again.")
-   res.status(400).render("account/login", {
-    title: "Login",
-    nav,
-    errors: null,
-    account_email,
-   })
-  return
-  }
-  try {
-   if (await bcrypt.compare(account_password, accountData.account_password)) {
-   delete accountData.account_password
-   const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 })
-   if(process.env.NODE_ENV === 'development') {
-     res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-     } else {
-       res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
-     }
-   return res.redirect("/account/")
-   }
-  } catch (error) {
-   return new Error('Access Forbidden')
-  }
- }
 
 module.exports = { 
   buildLogin, 
@@ -285,3 +289,4 @@ module.exports = {
   buildUpdate, 
   updateAccount, 
   updatePassword };
+

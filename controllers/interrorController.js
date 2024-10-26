@@ -2,9 +2,9 @@
  * This controller exists to create an exception for testing
  */
 
-const errorController = {};
+const interrorController = {};
 
-errorController.causeError = async function(req, res, next) {
+interrorController.causeError = async function(req, res, next) {
     console.log("Causing an error...")
     let aNumber = 1/0;
     throw new Error("This is an intentional error.")
@@ -14,4 +14,4 @@ errorController.causeError = async function(req, res, next) {
     })
 }
 
-module.exports = errorController;
+module.exports = interrorController;

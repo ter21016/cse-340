@@ -2,7 +2,7 @@
  const express = require("express")
 const router = new express.Router()
 const utilities = require("../utilities")
-const errorController = require("../controllers/errorController")
+const interrorController = require("../controllers/interrorController")
 
 // // Middleware causes an error
 router.use("/", utilities.handleErrors(async (req, res, next) => {
@@ -11,6 +11,6 @@ router.use("/", utilities.handleErrors(async (req, res, next) => {
  }))
 
 // // Route to cause 500 type error
- router.get("/", utilities.handleErrors(errorController.causeError))
+ router.get("/", utilities.handleErrors(interrorController.causeError))
 
  module.exports = router;

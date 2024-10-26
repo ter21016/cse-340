@@ -8,7 +8,7 @@
    </ul>
   <% } %>
 
-<form class="input-box" action="/account/registration" method="post">
+<form class="input-box" action="/account/register" method="post">
     <label>First name<input type="text" name="account_firstname" id="accountFirstname" required value="<%= locals.account_firstname %>"></label>
     <label>Last name<input type="text" name="account_lastname" required autocomplete="family-name" value="<%= locals.account_lastname %>"></label>
     <label>Email address<input type="email" name="account_email" required autocomplete="email" value="<%= locals.account_email %>"></label>
@@ -31,3 +31,6 @@
         }
     })
 </script>
+
+<script type="module" src="../../js/password.js"></script>
+

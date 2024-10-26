@@ -20,8 +20,8 @@ const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
 const messageRoute = require("./routes/messageRoute")
-const errorRoute = require("./routes/errorRoute")
-const utilities = require("./utilities/")
+const interrorRoute = require("./routes/interrorRoute")
+const utilities = require("./utilities/index.js")
 const pool = require("./database")
 
 // Init
@@ -83,9 +83,10 @@ app.use("/inv", require("./routes/inventoryRoute"))
 // Account routes - Unit 4
 app.use("/account", require("./routes/accountRoute"))
 // Message routes
-app.use("/message", messageRoute)
+app.use("/message", require("./routes/messageRoute"))
 // Intentional error route. Used for testing
-app.use("/ierror", errorRoute)
+//app.use("/ierror", interrorRoute)
+app.use("/ierror", require("./routes/interrorRoute"))
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page' })
@@ -103,7 +104,7 @@ app.use(async (err, req, res, next) => {
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
-    nav
+    nav,
   })
 })
 

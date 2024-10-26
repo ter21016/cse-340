@@ -19,6 +19,9 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 )
 
+// Route to logout
+router.get("/logout", utilities.handleErrors(accountController.accountLogout))
+
 // Registration handlers
 router.get("/registration", utilities.handleErrors(accountController.buildRegister))
 router.post(
@@ -52,7 +55,7 @@ router.post(
   //}
 //)
 
-// Route to logout
-router.get("/logout", utilities.handleErrors(accountController.accountLogout))
+
 
 module.exports = router
+
