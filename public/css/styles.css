@@ -374,9 +374,9 @@ section.car-listing dl dt {
   width: 2rem;
   border: 0;
 }
-.input-box .reveal-button.active {
-  background-image: url("/images/site/eye_closed.svg");
-}
+/* .input-box .reveal-button.active {
+  background-image: url("/images/site/download.png");
+} */
 .fine-print {
   font-size: .75em;
 }
