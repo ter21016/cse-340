@@ -28,7 +28,7 @@ ALTER TABLE IF EXISTS public.inventory
 ADD CONSTRAINT fk_classification FOREIGN KEY (classification_id) REFERENCES public.classification (classification_id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE NO ACTION;
 -- Table structure for table `account`
 CREATE TABLE public.account (
-    account_id integer NOT NULL,
+    account_id SERIAL PRIMARY KEY,
     account_firstname character varying NOT NULL,
     account_lastname character varying NOT NULL,
     account_email character varying NOT NULL,

@@ -188,6 +188,7 @@ Util.checkJWTToken = (req, res, next) => {
  */
 
 Util.updateCookie = (accountData, res) => {
+  console.log(accountData)
   const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: 3600,
   });
