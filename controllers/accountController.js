@@ -2,10 +2,9 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
-const utilities = require("../utilities")
-const accountModel = require("../models/account-model")
-const messageModel = require("../models/message-model")
-
+const utilities = require("../utilities");
+const accountModel = require("../models/account-model");
+const messageModel = require("../models/message-model");
 
 /* ****************************************
  *  Deliver registration view
@@ -34,14 +33,11 @@ async function registerAccount(req, res) {
   // Hash the password before storing
   let hashedPassword;
   try {
-    // regular password and cost (salt is generated automatically)
-    hashedPassword = await bcrypt.hashSync(account_password, 10);
+    // Hash the password asynchronously with a salt cost of 10
+    hashedPassword = await bcrypt.hash(account_password, 10);
   } catch (error) {
-    req.flash(
-      "notice",
-      "Sorry, there was an error processing the registration."
-    );
-    res.status(500).render("account/register", {
+    req.flash("notice", "Sorry, there was an error processing the registration.");
+    return res.status(500).render("account/register", {
       title: "Registration",
       nav,
       errors: null,
@@ -55,19 +51,21 @@ async function registerAccount(req, res) {
     hashedPassword
   );
 
+  console.log(regResult);
+
   if (regResult) {
     req.flash(
       "notice",
-      `Congratulations, you\'re registered ${account_firstname}. Please log in.`
+      `Congratulations, you're registered ${account_firstname}. Please log in.`
     );
-    res.status(201).render("account/login", {
+    return res.status(201).render("account/login", {
       title: "Login",
       errors: null,
       nav,
     });
   } else {
     req.flash("notice", "Sorry, the registration failed.");
-    res.status(501).render("account/register", {
+    return res.status(501).render("account/register", {
       title: "Registration",
       errors: null,
       nav,
@@ -92,35 +90,38 @@ async function buildLogin(req, res, next) {
  *  Process login post request
  * ************************************ */
 async function accountLogin(req, res) {
+  console.log("Request Body:", req.body); // Debugging
   let nav = await utilities.getNav();
   const { account_email, account_password } = req.body;
   const accountData = await accountModel.getAccountByEmail(account_email);
+  console.log("Account Data:", accountData); // Debugging
+
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.");
-    res.status(400).render("account/login", {
+    return res.status(400).render("account/login", {
       title: "Login",
       nav,
       errors: null,
       account_email,
     });
-    return;
   }
   try {
-    if (await bcrypt.compare(account_password, accountData.account_password)) {
+    const isPasswordValid = await bcrypt.compare(account_password, accountData.account_password);
+
+    if (isPasswordValid) {
       delete accountData.account_password;
-      
       utilities.updateCookie(accountData, res);
-     
       return res.redirect("/account/");
-    } // Need to have a wrong password option
-    else {
-      req.flash("notice", "Please check your credentials and try again."); // Login was hanging with bad password but correct id
-      res.redirect("/account/");
+    } else {
+      req.flash("notice", "Please check your credentials and try again.");
+      return res.redirect("/account/login"); // Redirect to login to provide feedback
     }
   } catch (error) {
-    return new Error("Access Forbidden");
+    console.error("Error during password comparison:", error);
+    return res.status(500).send("Access Forbidden");
   }
 }
+
 
 /**
  * Process account management get request
@@ -284,5 +285,4 @@ module.exports = {
   accountLogout, 
   buildUpdate, 
   updateAccount, 
-  updatePassword };
-
+  updatePassword }
